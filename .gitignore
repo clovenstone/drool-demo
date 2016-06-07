@@ -4,5 +4,4 @@
 /build/
 /gradle/
 .idea/workspace.xml
-src/test/resources/
 /.idea/
