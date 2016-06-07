@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.drools:knowledge-internal-api:5.5.0.Final">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.drools/knowledge-internal-api/5.5.0.Final/9bdf3b452db8db7037684a458eff6ca539a413a1/knowledge-internal-api-5.5.0.Final.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.drools/knowledge-internal-api/5.5.0.Final/30761ca0968dd0fb56de5b123703e4921a0177ad/knowledge-internal-api-5.5.0.Final-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

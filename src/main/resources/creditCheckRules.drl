@@ -1,0 +1,56 @@
+package creditCheckRules
+
+import com.cgi.odsc.drools.model.CustomerCCScore
+import com.cgi.odsc.drools.model.Customer
+import com.cgi.odsc.drools.model.Customer.CustomerBuilder
+import com.cgi.odsc.drools.KnowledgeBaseExecutor
+import com.cgi.odsc.drools.model.CustomerCCScore.CustomerCCScoreBuilder
+import com.cgi.odsc.drools.model.CustomerCCScore
+
+
+
+
+
+
+
+
+//from row number: 1
+//SafeAgeRangeWithJob
+rule "Row 1 CreditCheckDT"
+	dialect "mvel"
+	when
+		f1 : Customer( age >= 18 , age <= 55 , creditCardHolder == false , hasJob == true )
+		f2 : CustomerCCScore( badCreditCustomer == false , score >= 500 )
+	then
+		f1.setEligibleForNewCard( true );
+		f1.setBaseBalance( 500.0 );
+		f1.setRuleName( "rule_001" );
+end
+
+//from row number: 2
+//SafeAgeRangeWithJobBadCreditWithHighCScore
+rule "Row 2 CreditCheckDT"
+	dialect "mvel"
+	when
+		f1 : Customer( age >= 18 , age <= 55 , creditCardHolder == false , hasJob == false )
+		f2 : CustomerCCScore( badCreditCustomer == true , score >= 900 )
+	then
+		f1.setEligibleForNewCard( true );
+		f1.setBaseBalance( 500.0 );
+		f1.setRuleName( "rule_002" );
+end
+
+//from row number: 3
+//CreditCardHolderWithHighCScore
+rule "Row 3 CreditCheckDT"
+	dialect "mvel"
+	when
+		f1 : Customer( age >= 18 , creditCardHolder == true , currentCreditLimit >= 5000.0 , hasJob == false )
+		f2 : CustomerCCScore( badCreditCustomer == false , score >= 900 )
+	then
+		f1.setEligibleForNewCard( true );
+		f1.setBaseBalance( 1000.0 );
+		f1.setRuleName( "rule_003" );
+end
+
+

@@ -1,0 +1,47 @@
+group 'DroolDemo'
+version '1.0'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.7
+
+buildscript {
+
+
+    repositories {
+
+        mavenCentral()
+        jcenter()
+    }
+
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+
+}
+
+dependencies {
+
+    compile group: 'org.projectlombok', name :'lombok', version:'1.16.6'
+    //compile group: 'org.kie.remote', name: 'kie-remote-client', version: '6.4.0.Final'
+    compile group: 'org.jboss.logging', name: 'jboss-logging', version: '3.1.4.GA'
+
+    compile group: 'org.drools', name: 'drools-compiler', version: '5.5.0.Final'
+// http://mvnrepository.com/artifact/org.drools/drools-core
+    //compile group: 'org.drools', name: 'drools-core', version: '6.3.0.Final'
+
+    compile group: 'org.drools', name: 'drools-core', version: '5.5.0.Final'
+    compile 'org.springframework:spring-context:4.2.6.RELEASE'
+    testCompile group: 'junit', name: 'junit', version: '4.9'
+    // http://mvnrepository.com/artifact/org.springframework/spring-test
+    // http://mvnrepository.com/artifact/org.springframework/spring-test
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.6'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.6'
+    // http://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl
+    compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.6'
+    testCompile group: 'org.springframework', name: 'spring-test', version: '4.2.6.RELEASE'
+
+}
+
