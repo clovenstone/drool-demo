@@ -5,8 +5,6 @@ import com.cgi.odsc.drools.model.CustomerCCScore;
 import lombok.extern.slf4j.Slf4j;
 import org.drools.KnowledgeBase;
 import org.drools.runtime.StatefulKnowledgeSession;
-import org.hamcrest.core.IsNull;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -29,31 +27,19 @@ import static org.junit.Assert.assertThat;
 @Slf4j
 public class CreditCheckRuleTest {
 
-    
+
+    @Rule
+    public TestName name = new TestName();
     Customer customer1;
     Customer customer2;
     Customer customer3;
-   
     CustomerCCScore customerScore1;
     CustomerCCScore customerScore2;
     CustomerCCScore customerScore3;
-    
-    @Rule
-    public TestName name = new TestName();
-
     @Autowired
     KnowledgeBase knowledgeBase;
 
     StatefulKnowledgeSession statefulKnowledgeSession;
-
-    @Before
-    public void setup() {
-
-        customer3 = getRuleTwoCustomer();
-        customerScore3 = getRuleTwoCustomerWithGoodCCScore();
-
-    }
-
 
     @Test
     public void testRuleOnePass() {
@@ -65,12 +51,12 @@ public class CreditCheckRuleTest {
         statefulKnowledgeSession = knowledgeBase.newStatefulKnowledgeSession();
         statefulKnowledgeSession.insert(customer1);
         statefulKnowledgeSession.insert(customerScore1);
-        printCustomerEntityDetails(customer1,customerScore1,true);
+        printCustomerEntityDetails(customer1, customerScore1, true);
         statefulKnowledgeSession.fireAllRules();
-        printCustomerEntityDetails(customer1,customerScore1,false);
+        printCustomerEntityDetails(customer1, customerScore1, false);
         assertThat(customer1.isEligibleForNewCard(), is(true));
         assertEquals(500, customer1.getBaseBalance(), 0);
-        assertThat(customer1.getRuleName(),is("rule_001"));
+        assertThat(customer1.getRuleName(), is("rule_001"));
     }
 
     @Test
@@ -82,25 +68,25 @@ public class CreditCheckRuleTest {
         statefulKnowledgeSession = knowledgeBase.newStatefulKnowledgeSession();
         statefulKnowledgeSession.insert(customer1);
         statefulKnowledgeSession.insert(customerScore1);
-        printCustomerEntityDetails(customer1,customerScore1,true);
+        printCustomerEntityDetails(customer1, customerScore1, true);
         statefulKnowledgeSession.fireAllRules();
-        printCustomerEntityDetails(customer1,customerScore1,false);
+        printCustomerEntityDetails(customer1, customerScore1, false);
         assertThat(customer1.isEligibleForNewCard(), is(false));
         assertEquals(0, customer1.getBaseBalance(), 0);
         assertThat(customer1.getRuleName(), nullValue());
     }
 
     @Test
-    public void testRuleTwoPass(){
+    public void testRuleTwoPass() {
         customer2 = getRuleTwoCustomer();
         customerScore2 = getRuleTwoCustomerWithGoodCCScore();
         printTestMethod();
         statefulKnowledgeSession = knowledgeBase.newStatefulKnowledgeSession();
         statefulKnowledgeSession.insert(customer2);
         statefulKnowledgeSession.insert(customerScore2);
-        printCustomerEntityDetails(customer2,customerScore2,true);
+        printCustomerEntityDetails(customer2, customerScore2, true);
         statefulKnowledgeSession.fireAllRules();
-        printCustomerEntityDetails(customer2,customerScore2,false);
+        printCustomerEntityDetails(customer2, customerScore2, false);
         assertThat(customer2.isEligibleForNewCard(), is(true));
         assertEquals(500, customer2.getBaseBalance(), 0);
         assertThat(customer2.getRuleName(), is("rule_002"));
@@ -109,16 +95,16 @@ public class CreditCheckRuleTest {
 
 
     @Test
-    public void testRuleTwoFail(){
+    public void testRuleTwoFail() {
         customer2 = getRuleTwoCustomer();
         customerScore2 = getRuleTwoCustomerWithBadCCScore();
         printTestMethod();
         statefulKnowledgeSession = knowledgeBase.newStatefulKnowledgeSession();
         statefulKnowledgeSession.insert(customer2);
         statefulKnowledgeSession.insert(customerScore2);
-        printCustomerEntityDetails(customer2,customerScore2,true);
+        printCustomerEntityDetails(customer2, customerScore2, true);
         statefulKnowledgeSession.fireAllRules();
-        printCustomerEntityDetails(customer2,customerScore2,false);
+        printCustomerEntityDetails(customer2, customerScore2, false);
         assertThat(customer2.isEligibleForNewCard(), is(false));
         assertEquals(0, customer2.getBaseBalance(), 0);
         assertThat(customer2.getRuleName(), nullValue());
@@ -127,16 +113,16 @@ public class CreditCheckRuleTest {
 
 
     @Test
-    public void testRuleThreePass(){
+    public void testRuleThreePass() {
         customer3 = getRuleThreeCustomer();
         customerScore3 = getRuleThreeCustomerWithGoodCCScore();
         printTestMethod();
         statefulKnowledgeSession = knowledgeBase.newStatefulKnowledgeSession();
         statefulKnowledgeSession.insert(customer3);
         statefulKnowledgeSession.insert(customerScore3);
-        printCustomerEntityDetails(customer3,customerScore3,true);
+        printCustomerEntityDetails(customer3, customerScore3, true);
         statefulKnowledgeSession.fireAllRules();
-        printCustomerEntityDetails(customer3,customerScore3,false);
+        printCustomerEntityDetails(customer3, customerScore3, false);
         assertThat(customer3.isEligibleForNewCard(), is(true));
         assertEquals(1000, customer3.getBaseBalance(), 0);
         assertThat(customer3.getRuleName(), is("rule_003"));
@@ -144,16 +130,16 @@ public class CreditCheckRuleTest {
     }
 
     @Test
-    public void testRuleThreeFail(){
+    public void testRuleThreeFail() {
         customer3 = getRuleTwoCustomer();
         customerScore3 = getRuleThreeCustomerWithBadCCScore();
         printTestMethod();
         statefulKnowledgeSession = knowledgeBase.newStatefulKnowledgeSession();
         statefulKnowledgeSession.insert(customer3);
         statefulKnowledgeSession.insert(customerScore3);
-        printCustomerEntityDetails(customer3,customerScore3,true);
+        printCustomerEntityDetails(customer3, customerScore3, true);
         statefulKnowledgeSession.fireAllRules();
-        printCustomerEntityDetails(customer3,customerScore3,false);
+        printCustomerEntityDetails(customer3, customerScore3, false);
         assertThat(customer3.isEligibleForNewCard(), is(false));
         assertEquals(0, customer3.getBaseBalance(), 0);
         assertThat(customer3.getRuleName(), nullValue());
@@ -161,16 +147,14 @@ public class CreditCheckRuleTest {
     }
 
 
-   
-
-    private void printTestMethod(){
+    private void printTestMethod() {
         log.info("Executing: {}", name.getMethodName());
     }
 
-    private void printCustomerEntityDetails(Customer customer, CustomerCCScore customerCCScore, boolean isBefore){
+    private void printCustomerEntityDetails(Customer customer, CustomerCCScore customerCCScore, boolean isBefore) {
 
-        String placeHolder = isBefore? "before" : "after";
-        log.info("Customer details {}, rules applied: {} and CCScore {}", placeHolder, customer,customerCCScore);
+        String placeHolder = isBefore ? "before" : "after";
+        log.info("Customer details {}, rules applied: {} and CCScore {}", placeHolder, customer, customerCCScore);
 
     }
 
