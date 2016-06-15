@@ -5,6 +5,7 @@ import com.cgi.odsc.drools.model.CustomerCCScore;
 import lombok.extern.slf4j.Slf4j;
 import org.drools.KnowledgeBase;
 import org.drools.runtime.StatefulKnowledgeSession;
+import org.drools.runtime.StatelessKnowledgeSession;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -13,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.util.Assert;
+
+import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNull.nullValue;
@@ -39,6 +43,8 @@ public class CreditCheckRuleTest {
     @Autowired
     KnowledgeBase knowledgeBase;
 
+    StatelessKnowledgeSession statelessKnowledgeSession;
+
     StatefulKnowledgeSession statefulKnowledgeSession;
 
     @Test
@@ -48,11 +54,9 @@ public class CreditCheckRuleTest {
         customerScore1 = getRuleOneCustomerWithGoodCCScore();
 
         printTestMethod();
-        statefulKnowledgeSession = knowledgeBase.newStatefulKnowledgeSession();
-        statefulKnowledgeSession.insert(customer1);
-        statefulKnowledgeSession.insert(customerScore1);
+        statelessKnowledgeSession = knowledgeBase.newStatelessKnowledgeSession();
         printCustomerEntityDetails(customer1, customerScore1, true);
-        statefulKnowledgeSession.fireAllRules();
+        statelessKnowledgeSession.execute(Arrays.asList(new Object[]{customer1,customerScore1}));
         printCustomerEntityDetails(customer1, customerScore1, false);
         assertThat(customer1.isEligibleForNewCard(), is(true));
         assertEquals(500, customer1.getBaseBalance(), 0);
@@ -65,11 +69,10 @@ public class CreditCheckRuleTest {
         customer1 = getRuleOneCustomer();
         customerScore1 = getRuleOneCustomerWithBadCCScore();
         printTestMethod();
-        statefulKnowledgeSession = knowledgeBase.newStatefulKnowledgeSession();
-        statefulKnowledgeSession.insert(customer1);
-        statefulKnowledgeSession.insert(customerScore1);
+        statelessKnowledgeSession = knowledgeBase.newStatelessKnowledgeSession();
+
         printCustomerEntityDetails(customer1, customerScore1, true);
-        statefulKnowledgeSession.fireAllRules();
+        statelessKnowledgeSession.execute(Arrays.asList(new Object[]{customer1,customerScore1}));
         printCustomerEntityDetails(customer1, customerScore1, false);
         assertThat(customer1.isEligibleForNewCard(), is(false));
         assertEquals(0, customer1.getBaseBalance(), 0);
@@ -81,11 +84,9 @@ public class CreditCheckRuleTest {
         customer2 = getRuleTwoCustomer();
         customerScore2 = getRuleTwoCustomerWithGoodCCScore();
         printTestMethod();
-        statefulKnowledgeSession = knowledgeBase.newStatefulKnowledgeSession();
-        statefulKnowledgeSession.insert(customer2);
-        statefulKnowledgeSession.insert(customerScore2);
+        statelessKnowledgeSession = knowledgeBase.newStatelessKnowledgeSession();
         printCustomerEntityDetails(customer2, customerScore2, true);
-        statefulKnowledgeSession.fireAllRules();
+        statelessKnowledgeSession.execute(Arrays.asList(new Object[]{customer2,customerScore2}));
         printCustomerEntityDetails(customer2, customerScore2, false);
         assertThat(customer2.isEligibleForNewCard(), is(true));
         assertEquals(500, customer2.getBaseBalance(), 0);
@@ -99,11 +100,9 @@ public class CreditCheckRuleTest {
         customer2 = getRuleTwoCustomer();
         customerScore2 = getRuleTwoCustomerWithBadCCScore();
         printTestMethod();
-        statefulKnowledgeSession = knowledgeBase.newStatefulKnowledgeSession();
-        statefulKnowledgeSession.insert(customer2);
-        statefulKnowledgeSession.insert(customerScore2);
+        statelessKnowledgeSession = knowledgeBase.newStatelessKnowledgeSession();
         printCustomerEntityDetails(customer2, customerScore2, true);
-        statefulKnowledgeSession.fireAllRules();
+        statelessKnowledgeSession.execute(Arrays.asList(new Object[]{customer2,customerScore2}));
         printCustomerEntityDetails(customer2, customerScore2, false);
         assertThat(customer2.isEligibleForNewCard(), is(false));
         assertEquals(0, customer2.getBaseBalance(), 0);

@@ -5,6 +5,7 @@ import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
 import org.drools.builder.*;
 import org.drools.io.ResourceFactory;
+import org.drools.io.impl.UrlResource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,8 +22,8 @@ public class KnowledgeBaseExecutor {
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
-        kbuilder.add(ResourceFactory.newClassPathResource("creditCheckRules.drl"), ResourceType.DRL);
-
+        //kbuilder.add(ResourceFactory.newClassPathResource("creditCheckRules.drl"), ResourceType.DRL);
+        addRulesFromRemote(kbuilder);
         KnowledgeBuilderErrors errors = kbuilder.getErrors();
 
         if (errors.size() > 0) {
@@ -38,4 +39,14 @@ public class KnowledgeBaseExecutor {
         return knowledgeBase;
     }
 
+    private void addRulesFromRemote(KnowledgeBuilder kbuilder){
+
+        String url = "http://localhost:8080/drools-guvnor-5.5.0/rest/packages/creditCheckRules/source";
+        UrlResource resource = (UrlResource) ResourceFactory.newUrlResource(url);
+        resource.setBasicAuthentication("enabled");
+        resource.setUsername("admin");
+        resource.setPassword("admin");
+        kbuilder.add(resource, ResourceType.DRL);
+
+    }
 }
